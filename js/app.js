@@ -15,6 +15,9 @@ app.controller('xvgController', ['$scope','$http', '$interval',
       $scope.paidLast24h = 0;
       $scope.unpaid = 0;
 
+      $scope.errorNumber = 0;
+      $scope.errorClass = '';
+
       $scope.xvgToDollars = function(amount) {
         $http.get($scope.urlPriceXvg)
           .then(function (response) {
@@ -27,8 +30,21 @@ app.controller('xvgController', ['$scope','$http', '$interval',
         if ($scope.apiKey.length > 0) {
           $http.get('api/getInfosSuprnova.php?key='+$scope.apiKey)
             .then(function (response) {
-              $scope.hashrate = response.data.hashrate;
-              $scope.balance = response.data.balanceConfirmed;
+              if (response.data.hashrate > 1 && response.data.balanceConfirmed > 1) {
+                $scope.hashrate = response.data.hashrate;
+                $scope.balance = response.data.balanceConfirmed;
+                $scope.errorNumber = 0;
+                $scope.errorClass = '';
+              }
+              else {
+                if ($scope.errorNumber < 30) {
+                  $scope.errorClass = 'bg-warning';
+                }
+                else {
+                  $scope.errorClass = 'bg-danger';
+                }
+                $scope.errorNumber += 1;
+              }
             });
           }
       };
@@ -57,8 +73,8 @@ app.controller('xvgController', ['$scope','$http', '$interval',
           });
       };
 
-      $scope.getApiKeySuprnova();
       $scope.xvgToDollars(0);
-      $interval( function(){ $scope.xvgToDollars($scope.xvg); $scope.getInfosSuprnova($scope.apiKey); }, 10000);
+      $scope.getApiKeySuprnova();
+      $interval( function(){ $scope.xvgToDollars($scope.xvg); $scope.getInfosSuprnova($scope.apiKey); }, 2000);
     }
 ]);
