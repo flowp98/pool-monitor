@@ -11,7 +11,7 @@
     <script src="js/app.js" charset="utf-8"></script>
   </head>
 
-  <body ng-controller="xvgController as xvgCtrl">
+  <body ng-controller="xvgController as xvgCtrl" ng-class="theme">
     <div id="priceSingle">
       xvg : {{priceDollar | currency:"$"}}
     </div>
@@ -32,7 +32,7 @@
         <div class="card text-center">
           <h3 class="card-header bg-info">Hashrate</h3>
           <div class="card-block" ng-class="errorClass">
-            <h4 class="card-title pt-3">Hashrate : {{hashrate | number : 2}} MH/s</h4>
+            <h4 class="card-title pt-3 text-dark">Hashrate : {{hashrate | number : 2}} MH/s</h4>
           </div>
         </div>
       </div>
@@ -40,7 +40,7 @@
         <div class="card text-center">
           <h3 class="card-header bg-success">Balance</h3>
           <div class="card-block" ng-class="errorClass">
-            <h4 class="card-title pt-3">{{balance | number : 2}} xvg</h4>
+            <h4 class="card-title pt-3 text-dark">{{balance | number : 2}} xvg</h4>
           </div>
         </div>
       </div>
@@ -48,10 +48,12 @@
         <div class="card text-center">
           <h3 class="card-header bg-primary">Gain</h3>
           <div class="card-block" ng-class="errorClass">
-            <h4 class="card-title pt-3">{{balance*priceDollar | currency:"$"}}</h4>
+            <h4 class="card-title pt-3 text-dark">{{balance*priceDollar | currency:"$"}}</h4>
           </div>
         </div>
       </div>
     </div>
+
+    <button type="button" ng-click="switchTheme()" class="btn" id="theme-btn"> <span ng-show="theme == 'clear-theme'">Dark Theme</span> <span ng-show="theme == 'dark-theme'">Clear Theme</span> </button>
   </body>
 </html>

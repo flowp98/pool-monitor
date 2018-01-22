@@ -15,6 +15,8 @@ app.controller('xvgController', ['$scope','$http', '$interval',
       $scope.paidLast24h = 0;
       $scope.unpaid = 0;
 
+      $scope.theme = 'clear-theme';
+
       $scope.errorNumber = 0;
       $scope.errorClass = '';
 
@@ -37,7 +39,7 @@ app.controller('xvgController', ['$scope','$http', '$interval',
                 $scope.errorClass = '';
               }
               else {
-                if ($scope.errorNumber < 30) {
+                if ($scope.errorNumber < 60) {
                   $scope.errorClass = 'bg-warning';
                 }
                 else {
@@ -71,6 +73,15 @@ app.controller('xvgController', ['$scope','$http', '$interval',
               $scope.getInfosSuprnova($scope.apiKey);
             }
           });
+      };
+
+      $scope.switchTheme = function() {
+        if ($scope.theme == 'clear-theme') {
+          $scope.theme = 'dark-theme';
+        }
+        else {
+          $scope.theme = 'clear-theme';
+        }
       };
 
       $scope.xvgToDollars(0);
