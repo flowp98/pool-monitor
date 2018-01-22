@@ -1,0 +1,25 @@
+body {
+  /*background-image: url('../img/bg.jpg');*/
+  color: black;
+}
+
+.foreground {
+  z-index: 10;
+  position: absolute;
+  top: 200px;
+  width: 100%;
+}
+
+#particles-js {
+  z-index: 1;
+}
+
+#priceSingle {
+  position: fixed;
+  bottom: 15px;
+  left: 15px;
+}
+
+.card {
+  box-shadow: 0px 1px 5px lightgrey;
+}
