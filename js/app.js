@@ -16,6 +16,7 @@ app.controller('xvgController', ['$scope','$http', '$interval',
       $scope.unpaid = 0;
 
       $scope.theme = 'clear-theme';
+      $scope.sound = 'off';
 
       $scope.errorNumber = 0;
       $scope.errorClass = '';
@@ -39,11 +40,15 @@ app.controller('xvgController', ['$scope','$http', '$interval',
                 $scope.errorClass = '';
               }
               else {
-                if ($scope.errorNumber < 60) {
+                if ($scope.errorNumber < 5) {
                   $scope.errorClass = 'bg-warning';
                 }
                 else {
                   $scope.errorClass = 'bg-danger';
+                  if (($scope.errorNumber) % 10 == 0 && $scope.sound == 'on') {
+                    var audio = new Audio('sounds/appointed.mp3');
+                    audio.play();
+                  }
                 }
                 $scope.errorNumber += 1;
               }
@@ -81,6 +86,15 @@ app.controller('xvgController', ['$scope','$http', '$interval',
         }
         else {
           $scope.theme = 'clear-theme';
+        }
+      };
+
+      $scope.switchSound = function() {
+        if ($scope.sound == 'off') {
+          $scope.sound = 'on';
+        }
+        else {
+          $scope.sound = 'off';
         }
       };
 
