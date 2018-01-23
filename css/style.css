@@ -1,6 +1,15 @@
 .dark-theme {
   background-color: black;
-  color: white;
+  color: #A0A0A0;
+}
+
+.dark-theme-contrast {
+  background-color: #404040;
+  color: #A0A0A0;
+}
+
+.dark-theme-title {
+  color: #A0A0A0;
 }
 
 .clear-theme {
@@ -21,8 +30,12 @@
   left: 15px;
 }
 
-.card {
-  box-shadow: 0px 1px 5px lightgrey;
+.clear-theme-card {
+  box-shadow: 0px 1px 5px red;
+}
+
+.dark-theme-card {
+  box-shadow: 0px 1px 5px red;
 }
 
 #panel-settings {

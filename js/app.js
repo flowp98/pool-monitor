@@ -40,7 +40,7 @@ app.controller('xvgController', ['$scope','$http', '$interval',
                 $scope.errorClass = '';
               }
               else {
-                if ($scope.errorNumber < 5) {
+                if ($scope.errorNumber < 15) {
                   $scope.errorClass = 'bg-warning';
                 }
                 else {
@@ -100,6 +100,6 @@ app.controller('xvgController', ['$scope','$http', '$interval',
 
       $scope.xvgToDollars(0);
       $scope.getApiKeySuprnova();
-      $interval( function(){ $scope.xvgToDollars($scope.xvg); $scope.getInfosSuprnova($scope.apiKey); }, 2000);
+      $interval( function(){ $scope.xvgToDollars($scope.xvg); $scope.getInfosSuprnova($scope.apiKey); }, 20000);
     }
 ]);
