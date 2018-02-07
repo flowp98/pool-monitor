@@ -4,6 +4,8 @@ app.controller('xvgController', ['$scope','$http', '$interval',
     function($scope, $http, $interval){
       $scope.xvg = 0;
       $scope.priceDollar = 0;
+      $scope.priceBitcoin = 0;
+      $scope.priceSatoshi = 0;
       $scope.money = 0;
       $scope.hashrate = 0;
       $scope.balance = 0;
@@ -26,6 +28,15 @@ app.controller('xvgController', ['$scope','$http', '$interval',
           .then(function (response) {
             $scope.priceDollar = response.data[0].price_usd;
             $scope.money = $scope.xvg*$scope.priceDollar;
+          });
+      };
+
+      $scope.xvgToBitcoin = function(amount) {
+        $http.get($scope.urlPriceXvg)
+          .then(function (response) {
+            $scope.priceBitcoin = response.data[0].price_btc;
+            var re = new RegExp("0.(0){1,7}");
+            $scope.priceSatoshi = $scope.priceBitcoin.replace(re, "");
           });
       };
 
@@ -99,7 +110,8 @@ app.controller('xvgController', ['$scope','$http', '$interval',
       };
 
       $scope.xvgToDollars(0);
+      $scope.xvgToBitcoin(0);
       $scope.getApiKeySuprnova();
-      $interval( function(){ $scope.xvgToDollars($scope.xvg); $scope.getInfosSuprnova($scope.apiKey); }, 20000);
+      $interval( function(){ $scope.xvgToDollars($scope.xvg); $scope.xvgToBitcoin($scope.xvg); $scope.getInfosSuprnova($scope.apiKey); }, 20000);
     }
 ]);

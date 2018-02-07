@@ -13,7 +13,7 @@
 
   <body ng-controller="xvgController as xvgCtrl" ng-class="theme">
     <div id="priceSingle">
-      xvg : {{priceDollar | currency:"$"}}
+      xvg : {{priceDollar | currency:"$"}} | {{priceSatoshi}} sats
     </div>
 
     <h1 class="h1 mt-5 text-center" ng-class="theme == 'clear-theme' ? 'text-success' : 'dark-theme-title' ">Mining Monitoring - Suprnova - XVG</h1>
@@ -48,7 +48,7 @@
         <div class="card text-center">
           <h3 class="card-header" ng-class="theme == 'clear-theme' ? 'bg-primary' : 'dark-theme' ">Gain</h3>
           <div class="card-block" ng-class="theme == 'clear-theme' ? 'errorClass' : 'dark-theme-contrast' ">
-            <h4 class="card-title pt-3">{{balance*priceDollar | currency:"$"}}</h4>
+            <h4 class="card-title pt-3">{{balance*priceDollar | currency:"$"}} | {{balance*priceBitcoin | number : 5}}B</h4>
           </div>
         </div>
       </div>
