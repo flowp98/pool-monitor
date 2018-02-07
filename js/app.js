@@ -1,16 +1,15 @@
-var app = angular.module('xvg', []);
+var app = angular.module('minerMonitor', []);
 
-app.controller('xvgController', ['$scope','$http', '$interval',
+app.controller('minerMonitorController', ['$scope','$http', '$interval',
     function($scope, $http, $interval){
-      $scope.xvg = 0;
+      $scope.currency = 0;
       $scope.priceDollar = 0;
       $scope.priceBitcoin = 0;
       $scope.priceSatoshi = 0;
       $scope.money = 0;
       $scope.hashrate = 0;
       $scope.balance = 0;
-      $scope.urlPriceXvg = 'https://api.coinmarketcap.com/v1/ticker/verge/';
-      $scope.urlApiYiimp = 'http://api.yiimp.eu/api/wallet?address=';
+      $scope.currency = "xvg";
       $scope.apiKey = '';
 
       $scope.totalMined = 0;
@@ -23,18 +22,18 @@ app.controller('xvgController', ['$scope','$http', '$interval',
       $scope.errorNumber = 0;
       $scope.errorClass = '';
 
-      $scope.xvgToDollars = function(amount) {
-        $http.get($scope.urlPriceXvg)
+      $scope.currencyToDollar = function(amount) {
+        $http.get("api/getPrice.php?currency=" + $scope.currency)
           .then(function (response) {
-            $scope.priceDollar = response.data[0].price_usd;
-            $scope.money = $scope.xvg*$scope.priceDollar;
+            $scope.priceDollar = response.data.dollar;
+            $scope.money = $scope.currency*$scope.priceDollar;
           });
       };
 
-      $scope.xvgToBitcoin = function(amount) {
-        $http.get($scope.urlPriceXvg)
+      $scope.currencyToBitcoin = function(amount) {
+        $http.get("api/getPrice.php?currency=" + $scope.currency)
           .then(function (response) {
-            $scope.priceBitcoin = response.data[0].price_btc;
+            $scope.priceBitcoin = response.data.bitcoin;
             var re = new RegExp("0.(0){1,7}");
             $scope.priceSatoshi = $scope.priceBitcoin.replace(re, "");
           });
@@ -109,9 +108,9 @@ app.controller('xvgController', ['$scope','$http', '$interval',
         }
       };
 
-      $scope.xvgToDollars(0);
-      $scope.xvgToBitcoin(0);
+      $scope.currencyToDollar(0);
+      $scope.currencyToBitcoin(0);
       $scope.getApiKeySuprnova();
-      $interval( function(){ $scope.xvgToDollars($scope.xvg); $scope.xvgToBitcoin($scope.xvg); $scope.getInfosSuprnova($scope.apiKey); }, 20000);
+      $interval( function(){ $scope.currencyToDollar($scope.currency); $scope.currencyToBitcoin($scope.currency); $scope.getInfosSuprnova($scope.apiKey); }, 20000);
     }
 ]);
