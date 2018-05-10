@@ -24,10 +24,11 @@
   width: 100%;
 }
 
-#priceSingle {
+#bottomInfos {
   position: fixed;
   bottom: 15px;
   left: 15px;
+  right: 15px;
 }
 
 .clear-theme-card {
@@ -41,4 +42,12 @@
 #panel-settings {
   top: 5px;
   left: 5px;
+}
+
+.green {
+  color: green;
+}
+
+.red {
+  color: red;
 }

@@ -6,6 +6,9 @@ app.controller('minerMonitorController', ['$scope','$http', '$interval',
       $scope.priceDollar = 0;
       $scope.priceBitcoin = 0;
       $scope.priceSatoshi = 0;
+      $scope.change1h = 0;
+      $scope.change24h = 0;
+      $scope.change7d = 0;
       $scope.money = 0;
       $scope.hashrate = 0;
       $scope.balance = 0;
@@ -27,6 +30,9 @@ app.controller('minerMonitorController', ['$scope','$http', '$interval',
           .then(function (response) {
             $scope.priceDollar = response.data.dollar;
             $scope.money = $scope.currency*$scope.priceDollar;
+            $scope.change1h = response.data.change1h;
+            $scope.change24h = response.data.change24h;
+            $scope.change7d = response.data.change7d;
           });
       };
 

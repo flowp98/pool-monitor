@@ -14,10 +14,6 @@
   </head>
 
   <body ng-controller="minerMonitorController as minerMonitorCtrl" ng-class="theme">
-    <div id="priceSingle">
-      currency : {{priceDollar | number : 3 }}$ | {{priceSatoshi}} sats
-    </div>
-
     <h1 class="h1 mt-5 text-center" ng-class="theme == 'clear-theme' ? 'text-success' : 'dark-theme-title' ">Mining Monitoring - Suprnova</h1>
     <input type="text" class="form-control p-2 mt-2 col-lg-2 col-sm-11 mx-auto text-center" ng-class="theme == 'clear-theme' ? '' : 'dark-theme' " ng-model="currency" ng-change="currencyToBitcoin(0);currencyToDollar(0);">
 
@@ -35,7 +31,7 @@
         <div class="card text-center">
           <h3 class="card-header" ng-class="theme == 'clear-theme' ? 'bg-info' : 'dark-theme' ">Hashrate</h3>
           <div class="card-block" ng-class="theme == 'clear-theme' ? 'errorClass' : 'dark-theme-contrast' ">
-            <h4 class="card-title pt-3">Hashrate : {{hashrate/1000 | number : 2}} MH/s</h4>
+            <h4 class="card-title pt-3">{{hashrate/1000 | number : 2}} MH/s</h4>
           </div>
         </div>
       </div>
@@ -60,6 +56,17 @@
     <div class="col-lg-11 col-sm-11 mx-auto text-center mt-5">
       <button type="button" ng-class="theme == 'clear-theme' ? '' : 'dark-theme-contrast' " ng-click="switchTheme()" class="btn col-lg-2 col-sm-5 mx-auto mt-1 mb-1"> <span ng-show="theme == 'clear-theme'">Dark Theme</span> <span ng-show="theme == 'dark-theme'">Colorful Theme</span> </button>
       <button type="button" ng-class="theme == 'clear-theme' ? '' : 'dark-theme-contrast' " ng-click="switchSound()" class="btn col-lg-2 col-sm-5 mx-auto mt-1 mb-1"> <span ng-show="sound == 'on'">Set Sound Off</span> <span ng-show="sound == 'off'">Set Sound On</span> </button>
+    </div>
+
+    <div class="row p-3 mt-5" id="bottomInfos">
+      <div class="col-lg-6 col-sm-12">
+        {{currency}} price : {{priceDollar | number : 3 }}$ | {{priceSatoshi}} sats
+      </div>
+      <div class="col-lg-6 col-sm-12 text-right">
+        Change 1h : <span ng-class="change1h > 0 ? 'green' : 'red'">{{change1h}}</span> <span ng-show="change1h<0"><i class="fa fa-angle-down"></i></span> <span ng-show="change1h>0"><i class="fa fa-angle-up"></i></span>
+        | 24h : <span ng-class="change24h > 0 ? 'green' : 'red'">{{change24h}}</span> <span ng-show="change24h<0"><i class="fa fa-angle-down"></i></span> <span ng-show="change24h>0"><i class="fa fa-angle-up"></i></span>
+        | 7d : <span ng-class="change7d > 0 ? 'green' : 'red'">{{change7d}}</span> <span ng-show="change7d<0"><i class="fa fa-angle-down"></i></span> <span ng-show="change7d>0"><i class="fa fa-angle-up"></i></span>
+      </div>
     </div>
   </body>
 </html>
