@@ -10,23 +10,39 @@
     <script src="js/jquery.js" charset="utf-8"></script>
     <script src="js/angular.min.js"></script>
     <script src="js/bootstrap.min.js" charset="utf-8"></script>
+    <script src="js/chart.js"></script>
+    <script src="js/angular-chart.js"></script>
     <script src="js/app.js" charset="utf-8"></script>
   </head>
 
   <body ng-controller="minerMonitorController as minerMonitorCtrl" ng-class="theme">
-    <div id="priceSingle">
-      currency : {{priceDollar | number : 3 }}$ | {{priceSatoshi}} sats
+    <div class="row p-3" id="priceInfos">
+      <div class="col-lg-6 col-sm-12">
+        {{currency}} price : {{priceDollar | number : 3 }}$ | {{priceSatoshi}} sats
+      </div>
+      <div class="col-lg-6 col-sm-12 text-right">
+        Change 1h : <span ng-class="change1h > 0 ? 'green' : 'red'">{{change1h}}</span> <span ng-show="change1h<0"><i class="fa fa-angle-down"></i></span> <span ng-show="change1h>0"><i class="fa fa-angle-up"></i></span>
+        | 24h : <span ng-class="change24h > 0 ? 'green' : 'red'">{{change24h}}</span> <span ng-show="change24h<0"><i class="fa fa-angle-down"></i></span> <span ng-show="change24h>0"><i class="fa fa-angle-up"></i></span>
+        | 7d : <span ng-class="change7d > 0 ? 'green' : 'red'">{{change7d}}</span> <span ng-show="change7d<0"><i class="fa fa-angle-down"></i></span> <span ng-show="change7d>0"><i class="fa fa-angle-up"></i></span>
+      </div>
     </div>
 
-    <h1 class="h1 mt-5 text-center" ng-class="theme == 'clear-theme' ? 'text-success' : 'dark-theme-title' ">Mining Monitoring - Suprnova</h1>
-    <input type="text" class="form-control p-2 mt-2 col-lg-2 col-sm-11 mx-auto text-center" ng-class="theme == 'clear-theme' ? '' : 'dark-theme' " ng-model="currency" ng-change="currencyToBitcoin(0);currencyToDollar(0);">
+    <h1 class="h1 mt-5 text-center" ng-class="theme == 'clear-theme' ? 'text-success' : 'dark-theme-title' ">Mining Monitoring</h1>
+    <div class="row">
+      <input type="text" class="form-control p-2 mt-2 offset-lg-4 col-lg-2 col-sm-11 text-center" ng-class="theme == 'clear-theme' ? '' : 'dark-theme' " ng-model="currency" ng-change="currencyToBitcoin(0);currencyToDollar(0);">
+      <select class="custom-select mr-sm-2 mt-2 col-lg-2 col-sm-11 text-center" ng-model="miningPool" ng-change="getInfos(apiKey)">
+        <option value="suprnova">Suprnova</option>
+        <option value="yiimp">Yiimp</option>
+        <option value="elitehash">Elitehash</option>
+      </select>
+    </div>
 
     <form class="mb-5 col-lg-11 col-md-11 col-sm-12 col-xs-12 mx-auto mt-5" novalidate>
       <div class="input-group mb-2">
         <div class="input-group-prepend">
           <div class="input-group-text" ng-class="theme == 'clear-theme' ? '' : 'dark-theme' ">Suprnova API Key <button class="btn ml-3" ng-class="theme == 'clear-theme' ? 'btn-success' : 'dark-theme-contrast' " ng-click="saveApiKeySuprnova(apiKey)">Save</button> </div>
         </div>
-        <input type="text" class="form-control p-2" ng-class="theme == 'clear-theme' ? '' : 'dark-theme' " name="apiKey" ng-model="apiKey" ng-change="getInfosSuprnova(apiKey)">
+        <input type="text" class="form-control p-2" ng-class="theme == 'clear-theme' ? '' : 'dark-theme' " name="apiKey" ng-model="apiKey" ng-change="getInfos(apiKey)">
       </div>
     </form>
 
@@ -35,7 +51,7 @@
         <div class="card text-center">
           <h3 class="card-header" ng-class="theme == 'clear-theme' ? 'bg-info' : 'dark-theme' ">Hashrate</h3>
           <div class="card-block" ng-class="theme == 'clear-theme' ? 'errorClass' : 'dark-theme-contrast' ">
-            <h4 class="card-title pt-3">Hashrate : {{hashrate/1000 | number : 2}} MH/s</h4>
+            <h4 class="card-title pt-3">{{hashrate/1000 | number : 2}} MH/s</h4>
           </div>
         </div>
       </div>
@@ -52,6 +68,36 @@
           <h3 class="card-header" ng-class="theme == 'clear-theme' ? 'bg-primary' : 'dark-theme' ">Gain</h3>
           <div class="card-block" ng-class="theme == 'clear-theme' ? 'errorClass' : 'dark-theme-contrast' ">
             <h4 class="card-title pt-3">{{balance*priceDollar | currency:"$"}} | {{balance*priceBitcoin | number : 5}} <i class="fab fa-btc"></i></h4>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row mt-3">
+      <div class="col-lg-10 col-sm-11 col-xs-11 mx-auto">
+        <div class="card border-info">
+          <div class="card-header text-white" ng-class="theme == 'clear-theme' ? 'bg-info' : 'dark-theme'">
+            Workers
+          </div>
+          <div class="card-body"  ng-class="theme == 'clear-theme' ? 'errorClass' : 'dark-theme-contrast' ">
+            <div class="col-lg-7" style="display:inline-block;">
+              <table class="table">
+                  <tr>
+                    <th>ID</th>
+                    <th>Username</th>
+                    <th>Hashrate</th>
+                  </tr>
+                  <tr ng-repeat="worker in workers">
+                    <td>{{worker.id}}</td>
+                    <td>{{worker.username}}</td>
+                    <td>{{worker.hashrate/1000 | number : 2}} MH/s</td>
+                  </tr>
+              </table>
+            </div>
+            <div class="col-lg-4" style="display:inline-block;">
+              <canvas id="doughnut" class="chart chart-doughnut" chart-data="dataGraphStatsWorkers" chart-labels="labelsGraphStatsWorkers">
+              </canvas>
+            </div>
           </div>
         </div>
       </div>

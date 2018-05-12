@@ -1,4 +1,4 @@
-var app = angular.module('minerMonitor', []);
+var app = angular.module('minerMonitor', ['chart.js']);
 
 app.controller('minerMonitorController', ['$scope','$http', '$interval',
     function($scope, $http, $interval){
@@ -6,11 +6,20 @@ app.controller('minerMonitorController', ['$scope','$http', '$interval',
       $scope.priceDollar = 0;
       $scope.priceBitcoin = 0;
       $scope.priceSatoshi = 0;
+      $scope.change1h = 0;
+      $scope.change24h = 0;
+      $scope.change7d = 0;
+
       $scope.money = 0;
       $scope.hashrate = 0;
       $scope.balance = 0;
-      $scope.currency = "xvg";
+      $scope.workers = [];
+      $scope.labelsGraphStatsWorkers = [];
+      $scope.dataGraphStatsWorkers = [];
+
+      $scope.currency = "rvn";
       $scope.apiKey = '';
+      $scope.miningPool = 'suprnova';
 
       $scope.totalMined = 0;
       $scope.paidLast24h = 0;
@@ -27,6 +36,9 @@ app.controller('minerMonitorController', ['$scope','$http', '$interval',
           .then(function (response) {
             $scope.priceDollar = response.data.dollar;
             $scope.money = $scope.currency*$scope.priceDollar;
+            $scope.change1h = response.data.change1h;
+            $scope.change24h = response.data.change24h;
+            $scope.change7d = response.data.change7d;
           });
       };
 
@@ -39,9 +51,19 @@ app.controller('minerMonitorController', ['$scope','$http', '$interval',
           });
       };
 
+      $scope.getInfos = function(apiKey) {
+        if ($scope.miningPool == 'suprnova') {
+          $scope.getInfosSuprnova(apiKey);
+        } else if ($scope.miningPool == 'yiimp') {
+
+        } else if ($scope.miningPool == 'elitehash') {
+
+        }
+      };
+
       $scope.getInfosSuprnova = function(apiKey) {
         if ($scope.apiKey.length > 0) {
-          $http.get('api/getInfosSuprnova.php?key='+$scope.apiKey)
+          $http.get('api/getInfosSuprnova.php?key='+$scope.apiKey+'&currency='+$scope.currency+'&algo=nochoice')
             .then(function (response) {
               if (response.data.hashrate > 1 && response.data.balanceConfirmed > 1) {
                 $scope.hashrate = response.data.hashrate;
@@ -61,6 +83,11 @@ app.controller('minerMonitorController', ['$scope','$http', '$interval',
                   }
                 }
                 $scope.errorNumber += 1;
+              }
+              $scope.workers = response.data.workers;
+              for (var i = 0; i < $scope.workers.length; i++) {
+                $scope.dataGraphStatsWorkers[i] = $scope.workers[i].hashrate;
+                $scope.labelsGraphStatsWorkers[i] = $scope.workers[i].username;
               }
             });
           }
@@ -111,6 +138,6 @@ app.controller('minerMonitorController', ['$scope','$http', '$interval',
       $scope.currencyToDollar(0);
       $scope.currencyToBitcoin(0);
       $scope.getApiKeySuprnova();
-      $interval( function(){ $scope.currencyToDollar($scope.currency); $scope.currencyToBitcoin($scope.currency); $scope.getInfosSuprnova($scope.apiKey); }, 20000);
+      $interval( function(){ $scope.currencyToDollar($scope.currency); $scope.currencyToBitcoin($scope.currency); $scope.getInfosSuprnova($scope.apiKey); }, 30000);
     }
 ]);
