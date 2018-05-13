@@ -1,7 +1,7 @@
 var app = angular.module('minerMonitor', ['chart.js']);
 
-app.controller('minerMonitorController', ['$scope','$http', '$interval',
-    function($scope, $http, $interval){
+app.controller('minerMonitorController', ['$scope','$http', '$interval', '$timeout',
+    function($scope, $http, $interval, $timeout){
       $scope.currency = 0;
       $scope.priceDollar = 0;
       $scope.priceBitcoin = 0;
@@ -16,10 +16,26 @@ app.controller('minerMonitorController', ['$scope','$http', '$interval',
       $scope.workers = [];
       $scope.labelsGraphStatsWorkers = [];
       $scope.dataGraphStatsWorkers = [];
+      $scope.dataHashrate = [[]];
+      $scope.labelsHashrate = [];
+      $scope.graphOptionsHashrate = {scales: {
+                                      yAxes: [{
+                                          display: true,
+                                          ticks: {
+                                              beginAtZero: true
+                                          }
+                                      }],
+                                      xAxes: [{
+                                          display: false
+                                      }]}
+                                    };
 
       $scope.currency = "rvn";
       $scope.apiKey = '';
       $scope.miningPool = 'suprnova';
+
+      $scope.saveSuccessful = false;
+      $scope.saveError = false;
 
       $scope.totalMined = 0;
       $scope.paidLast24h = 0;
@@ -57,7 +73,7 @@ app.controller('minerMonitorController', ['$scope','$http', '$interval',
         } else if ($scope.miningPool == 'yiimp') {
 
         } else if ($scope.miningPool == 'elitehash') {
-
+          $scope.getInfosElitehash(apiKey);
         }
       };
 
@@ -65,55 +81,67 @@ app.controller('minerMonitorController', ['$scope','$http', '$interval',
         if ($scope.apiKey.length > 0) {
           $http.get('api/getInfosSuprnova.php?key='+$scope.apiKey+'&currency='+$scope.currency+'&algo=nochoice')
             .then(function (response) {
-              if (response.data.hashrate > 1 && response.data.balanceConfirmed > 1) {
-                $scope.hashrate = response.data.hashrate;
-                $scope.balance = response.data.balanceConfirmed;
-                $scope.errorNumber = 0;
-                $scope.errorClass = '';
-              }
-              else {
-                if ($scope.errorNumber < 15) {
-                  $scope.errorClass = 'bg-warning';
-                }
-                else {
-                  $scope.errorClass = 'bg-danger';
-                  if (($scope.errorNumber) % 10 == 0 && $scope.sound == 'on') {
-                    var audio = new Audio('sounds/appointed.mp3');
-                    audio.play();
-                  }
-                }
-                $scope.errorNumber += 1;
-              }
+              $scope.hashrate = response.data.hashrate;
+              $scope.balance = response.data.balanceConfirmed;
+
               $scope.workers = response.data.workers;
               for (var i = 0; i < $scope.workers.length; i++) {
                 $scope.dataGraphStatsWorkers[i] = $scope.workers[i].hashrate;
                 $scope.labelsGraphStatsWorkers[i] = $scope.workers[i].username;
               }
+
+              $scope.dataHashrate[0].push(response.data.hashrate/1000);
+              $scope.labelsHashrate.push($scope.dataHashrate[0].length);
+              //console.log($scope.dataHashrate);
             });
           }
       };
 
-      $scope.saveApiKeySuprnova = function(apiKey) {
+      $scope.getInfosElitehash = function(apiKey) {
         if ($scope.apiKey.length > 0) {
-          $http.get('api/saveApiKey.php?apiKey=' + apiKey)
+          $http.get('api/getInfosElitehash.php?key='+$scope.apiKey+'&currency='+$scope.currency+'&algo=nochoice')
             .then(function (response) {
-              if (response.data.status == 'success'){
-                console.log('SUCCESS');
-              }
-              else {
-                console.log('ERROR');
-              }
+                $scope.hashrate = response.data.hashrate;
+                $scope.balance = response.data.balanceConfirmed;
+                $scope.workers = [];
+
+                $scope.dataHashrate[0].push(response.data.hashrate/1000);
+                $scope.labelsHashrate.push($scope.dataHashrate[0].length);
             });
           }
       };
 
-      $scope.getApiKeySuprnova = function() {
-        $http.get('api/getApiKey.php')
+      $scope.saveInfos = function() {
+        $http.get('api/saveInfos.php?apiKey=' + $scope.apiKey + '&currency=' + $scope.currency + '&pool=' + $scope.miningPool)
+          .then(function (response) {
+            if (response.data.status == 'success'){
+              $scope.saveSuccessful = true;
+              $timeout( function(){
+                  $scope.saveSuccessful = false;
+              }, 5000 );
+            }
+            else {
+              $scope.saveError = true;
+              $timeout( function(){
+                  $scope.saveError = false;
+              }, 5000 );
+            }
+          });
+      };
+
+      $scope.getSavedInfos = function() {
+        $http.get('api/getInfos.php')
           .then(function (response) {
             if (response.data.apiKey != 'NONE') {
               $scope.apiKey = response.data.apiKey;
-              $scope.getInfosSuprnova($scope.apiKey);
             }
+            if (response.data.currency != 'NONE') {
+              $scope.currency = response.data.currency;
+            }
+            if (response.data.pool != 'NONE') {
+              $scope.miningPool = response.data.pool;
+            }
+            $scope.getInfos($scope.apiKey);
           });
       };
 
@@ -135,9 +163,14 @@ app.controller('minerMonitorController', ['$scope','$http', '$interval',
         }
       };
 
+      $scope.resetGraphsData = function() {
+        $scope.dataHashrate[0] = [];
+        $scope.labelsHashrate = [];
+      };
+
       $scope.currencyToDollar(0);
       $scope.currencyToBitcoin(0);
-      $scope.getApiKeySuprnova();
-      $interval( function(){ $scope.currencyToDollar($scope.currency); $scope.currencyToBitcoin($scope.currency); $scope.getInfosSuprnova($scope.apiKey); }, 30000);
+      $scope.getSavedInfos();
+      $interval( function(){ $scope.currencyToDollar($scope.currency); $scope.currencyToBitcoin($scope.currency); $scope.getInfos($scope.apiKey); }, 30000);
     }
 ]);

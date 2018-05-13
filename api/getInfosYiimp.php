@@ -1,17 +1,5 @@
 <?php
 
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
-set_time_limit(0);
-
-$arrContextOptions=array(
-    "ssl"=>array(
-        "verify_peer"=>false,
-        "verify_peer_name"=>false,
-    ),
-);
-
 if (isset($_GET['wallet']) && !empty($_GET['wallet'])) {
   $wallet = $_GET['wallet'];
 

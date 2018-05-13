@@ -48,3 +48,9 @@
 .red {
   color: red;
 }
+
+.savingMsg {
+  position: fixed;
+  right:4%;
+  z-index: 5;
+}
