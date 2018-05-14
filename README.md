@@ -1,4 +1,4 @@
-# suprnova-monitor
+# pool-monitor
 
 This is a web UI to easily have a real time view on your mining device. Built with HTML, CSS, Bootstrap and AngularJS for the front end and PHP for the back end.
 
