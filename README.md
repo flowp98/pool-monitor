@@ -8,7 +8,7 @@ You just need your API Key that you can find in My Account > Edit Account on the
 
 ## Options
 
-You can save the API key (it's only saved on your computer in a cookie), turn on/off the sound alert when an error is detected and choose the theme which could be clear or dark for the night demons ;)
+You can save the API key (it's only saved on your computer in a cookie), choose the theme which could be clear or dark for the night demons ;)
 
 ![alt text](https://github.com/flowp98/pool-monitor/blob/master/img/screen_demo.png)
 
