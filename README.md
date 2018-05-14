@@ -4,7 +4,7 @@ This is a web UI to easily have a real time view on your mining device. Built wi
 
 ## Setup
 
-You just need your API Key that you can find in My Account > Edit Account on the Suprnova web UI. It will show you the hashrate, the balance and the gain on live. Choose what you mine (Complete name or abbreviation work, like verge or xvg).
+You just need your API Key that you can find in My Account > Edit Account on the Suprnova web UI, or your wallet address. It will show you the hashrate, the balance and the gain on live. For suprnova users, workers too. Choose what you mine (Complete name or abbreviation work, like verge or xvg). You have the price on live too.
 
 ## Options
 
