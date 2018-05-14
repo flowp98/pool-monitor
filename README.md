@@ -10,7 +10,11 @@ You just need your API Key that you can find in My Account > Edit Account on the
 
 You can save the API key (it's only saved on your computer in a cookie), choose the theme which could be clear or dark for the night demons ;)
 
+
 ![alt text](https://github.com/flowp98/pool-monitor/blob/master/img/screen_demo.png)
 
 
+
 XVG address for donation : DBCWcgj1tEbyA2UQrbrBT8cBNgTabZDhVP
+
+RVN address for donation : RBC2wh5UcePzzHAvWiPHfzKH5kYVBxPSwY
