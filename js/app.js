@@ -111,7 +111,7 @@ app.controller('minerMonitorController', ['$scope','$http', '$interval', '$timeo
                 $scope.hashrate = response.data.hashrate;
                 $scope.balance = response.data.balanceConfirmed;
 
-                $scope.dataHashrate[0].push(response.data.hashrate/1000);
+                $scope.dataHashrate[0].push(response.data.hashrate);
                 $scope.labelsHashrate.push($scope.dataHashrate[0].length);
             });
           }
