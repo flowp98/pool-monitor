@@ -92,9 +92,9 @@
     <div class="row mt-3">
       <div class="offset-lg-1 col-lg-6 col-sm-11 col-xs-11" ng-show="workers.length > 0">
         <div class="card border-info">
-          <div class="card-header text-white" ng-class="theme == 'clear-theme' ? 'bg-info' : 'dark-theme'">
-            Workers ({{workers.length - activeWorkers}} / {{workers.length}} online)
-            <button class="btn" style="position:absolute;right:5px;top:5px;" ng-click="switchWorkersOnOff()">Show {{showOnlineWorkers ? 'offline' : 'online'}}</button>
+          <div class="card-header" ng-class="theme == 'clear-theme' ? 'bg-info text-white' : 'dark-theme'">
+            Workers ({{activeWorkers}} / {{workers.length}} online)
+            <button class="btn" style="position:absolute;right:5px;top:5px;" ng-click="switchWorkersOnOff()" ng-class="theme == 'clear-theme' ? 'btn-info' : 'dark-theme-contrast' ">Show {{showOnlineWorkers ? 'offline' : 'online'}}</button>
           </div>
           <div class="card-body"  ng-class="theme == 'clear-theme' ? 'errorClass' : 'dark-theme-contrast' ">
             <div class="col-lg-7" style="display:inline-block;">
@@ -132,7 +132,7 @@
       </div>
       <div ng-class="workers.length > 0 ? 'col-lg-4 col-xs-11 col-sm-11' : 'col-lg-5 col-xs-11 col-sm-11 mx-auto'" ng-show="dataHashrate[0].length > 0">
         <div class="card border-info" ng-class="theme == 'clear-theme' ? 'errorClass' : 'dark-theme-contrast' ">
-          <div class="card-header text-white" ng-class="theme == 'clear-theme' ? 'bg-info' : 'dark-theme'">
+          <div class="card-header" ng-class="theme == 'clear-theme' ? 'bg-info text-white' : 'dark-theme'">
             Hashrate evolution
           </div>
           <div class="p-3">
@@ -144,7 +144,8 @@
 
     <div class="col-lg-11 col-sm-11 mx-auto text-center mt-5">
       <button type="button" ng-class="theme == 'clear-theme' ? '' : 'dark-theme-contrast' " ng-click="switchTheme()" class="btn col-lg-2 col-sm-5 mx-auto mt-1 mb-1"> <span ng-show="theme == 'clear-theme'">Dark Theme</span> <span ng-show="theme == 'dark-theme'">Colorful Theme</span> </button>
-      <button type="button" ng-class="theme == 'clear-theme' ? '' : 'dark-theme-contrast' " ng-click="switchSound()" class="btn col-lg-2 col-sm-5 mx-auto mt-1 mb-1"> <span ng-show="sound == 'on'">Set Sound Off</span> <span ng-show="sound == 'off'">Set Sound On</span> </button>
+      <!--<button type="button" ng-class="theme == 'clear-theme' ? '' : 'dark-theme-contrast' " ng-click="switchSound()" class="btn col-lg-2 col-sm-5 mx-auto mt-1 mb-1"> <span ng-show="sound == 'on'">Set Sound Off</span> <span ng-show="sound == 'off'">Set Sound On</span> </button>
+      -->
     </div>
   </body>
 </html>

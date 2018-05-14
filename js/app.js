@@ -83,6 +83,7 @@ app.controller('minerMonitorController', ['$scope','$http', '$interval', '$timeo
         if ($scope.apiKey.length > 0) {
           $http.get('api/getInfosSuprnova.php?key='+$scope.apiKey+'&currency='+$scope.currency+'&algo=nochoice')
             .then(function (response) {
+              $scope.activeWorkers=0;
               $scope.hashrate = response.data.hashrate;
               $scope.balance = response.data.balanceConfirmed;
 
@@ -104,11 +105,11 @@ app.controller('minerMonitorController', ['$scope','$http', '$interval', '$timeo
 
       $scope.getInfosElitehash = function(apiKey) {
         if ($scope.apiKey.length > 0) {
+          $scope.workers = [];
           $http.get('api/getInfosElitehash.php?key='+$scope.apiKey+'&currency='+$scope.currency+'&algo=nochoice')
             .then(function (response) {
                 $scope.hashrate = response.data.hashrate;
                 $scope.balance = response.data.balanceConfirmed;
-                $scope.workers = [];
 
                 $scope.dataHashrate[0].push(response.data.hashrate/1000);
                 $scope.labelsHashrate.push($scope.dataHashrate[0].length);
