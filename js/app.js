@@ -14,6 +14,8 @@ app.controller('minerMonitorController', ['$scope','$http', '$interval', '$timeo
       $scope.hashrate = 0;
       $scope.balance = 0;
       $scope.workers = [];
+      $scope.activeWorkers = 0;
+      $scope.showOnlineWorkers = true;
       $scope.labelsGraphStatsWorkers = [];
       $scope.dataGraphStatsWorkers = [];
       $scope.dataHashrate = [[]];
@@ -88,6 +90,9 @@ app.controller('minerMonitorController', ['$scope','$http', '$interval', '$timeo
               for (var i = 0; i < $scope.workers.length; i++) {
                 $scope.dataGraphStatsWorkers[i] = $scope.workers[i].hashrate;
                 $scope.labelsGraphStatsWorkers[i] = $scope.workers[i].username;
+                if ($scope.workers[i].hashrate > 0) {
+                  $scope.activeWorkers++;
+                }
               }
 
               $scope.dataHashrate[0].push(response.data.hashrate/1000);
@@ -145,6 +150,18 @@ app.controller('minerMonitorController', ['$scope','$http', '$interval', '$timeo
           });
       };
 
+      $scope.switchPool = function() {
+        $scope.resetGraphsData();
+        $http.get('api/getApikey.php?pool=' + $scope.miningPool)
+          .then(function (response) {
+            if (response.data.apiKey != 'NONE') {
+              $scope.apiKey = response.data.apiKey;
+              $scope.getInfos($scope.apiKey);
+            }
+            //$scope.savedInfos();
+          });
+      };
+
       $scope.switchTheme = function() {
         if ($scope.theme == 'clear-theme') {
           $scope.theme = 'dark-theme';
@@ -162,6 +179,25 @@ app.controller('minerMonitorController', ['$scope','$http', '$interval', '$timeo
           $scope.sound = 'off';
         }
       };
+
+      $scope.switchWorkersOnOff = function() {
+        if (!$scope.showOnlineWorkers) {
+          $scope.showOnlineWorkers = true;
+        }
+        else {
+          $scope.showOnlineWorkers = false;
+        }
+      };
+
+      $scope.getHashrate = function() {
+        var hashrate = 0;
+        if ($scope.miningPool == 'suprnova') {
+          hashrate = $scope.hashrate/1000;
+        } else {
+          hashrate = $scope.hashrate;
+        }
+        return hashrate;
+      }
 
       $scope.resetGraphsData = function() {
         $scope.dataHashrate[0] = [];

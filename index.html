@@ -46,7 +46,7 @@
     <h1 class="h1 mt-5 text-center" ng-class="theme == 'clear-theme' ? 'text-success' : 'dark-theme-title' ">Mining <button ng-class="theme == 'clear-theme' ? '' : 'dark-theme-contrast' " class="btn" ng-click="getInfos(apiKey)"><i class="fa fa-sync-alt"></i></button> Monitoring</h1>
     <div class="row">
       <input type="text" class="form-control p-2 mt-2 offset-lg-4 col-lg-2 col-sm-11 col-xs-11 text-center" ng-class="theme == 'clear-theme' ? '' : 'dark-theme' " ng-model="currency" ng-change="currencyToBitcoin(0);currencyToDollar(0);">
-      <select ng-class="theme == 'clear-theme' ? '' : 'dark-theme-contrast' " class="custom-select mr-sm-2 mt-2 col-lg-2 col-sm-11 col-xs-11 text-center" ng-model="miningPool" ng-change="resetGraphsData();getInfos(apiKey);">
+      <select ng-class="theme == 'clear-theme' ? '' : 'dark-theme-contrast' " class="custom-select mr-sm-2 mt-2 col-lg-2 col-sm-11 col-xs-11 text-center" ng-model="miningPool" ng-change="switchPool();">
         <option value="suprnova">Suprnova</option>
         <option value="yiimp">Yiimp</option>
         <option value="elitehash">Elitehash</option>
@@ -67,7 +67,7 @@
         <div class="card text-center">
           <h3 class="card-header" ng-class="theme == 'clear-theme' ? 'bg-info' : 'dark-theme' ">Hashrate</h3>
           <div class="card-block" ng-class="theme == 'clear-theme' ? 'errorClass' : 'dark-theme-contrast' ">
-            <h4 class="card-title pt-3">{{hashrate/1000 | number : 2}} MH/s</h4>
+            <h4 class="card-title pt-3">{{getHashrate() | number : 2}} MH/s</h4>
           </div>
         </div>
       </div>
@@ -93,20 +93,33 @@
       <div class="offset-lg-1 col-lg-6 col-sm-11 col-xs-11" ng-show="workers.length > 0">
         <div class="card border-info">
           <div class="card-header text-white" ng-class="theme == 'clear-theme' ? 'bg-info' : 'dark-theme'">
-            Workers ({{workers.length}} online)
+            Workers ({{workers.length - activeWorkers}} / {{workers.length}} online)
+            <button class="btn" style="position:absolute;right:5px;top:5px;" ng-click="switchWorkersOnOff()">Show {{showOnlineWorkers ? 'offline' : 'online'}}</button>
           </div>
           <div class="card-body"  ng-class="theme == 'clear-theme' ? 'errorClass' : 'dark-theme-contrast' ">
             <div class="col-lg-7" style="display:inline-block;">
-              <table class="table">
+              <table class="table" ng-show="showOnlineWorkers">
                   <tr>
                     <th>ID</th>
                     <th>Username</th>
                     <th>Hashrate</th>
                   </tr>
-                  <tr ng-repeat="worker in workers">
+                  <tr ng-repeat="worker in workers" ng-show="worker.hashrate>0">
                     <td>{{worker.id}}</td>
                     <td>{{worker.username}}</td>
                     <td>{{worker.hashrate/1000 | number : 2}} MH/s</td>
+                  </tr>
+              </table>
+              <table class="table" ng-hide="showOnlineWorkers">
+                  <tr>
+                    <th>ID</th>
+                    <th>Username</th>
+                    <th>Status</th>
+                  </tr>
+                  <tr ng-repeat="worker in workers" ng-show="worker.hashrate==0">
+                    <td>{{worker.id}}</td>
+                    <td>{{worker.username}}</td>
+                    <td style="color:red;"><i class="fa fa-exclamation-circle"></i></td>
                   </tr>
               </table>
             </div>
