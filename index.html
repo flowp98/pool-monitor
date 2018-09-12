@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html ng-app="minerMonitor">
+<html ng-app="stalk">
   <head>
     <meta charset="utf-8">
-    <title>Mining Monitoring - Suprnova</title>
+    <title>Welcome to Syem</title>
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <script defer src="js/fontawesome.all.js"></script>
     <script src="js/jquery.js" charset="utf-8"></script>
@@ -15,137 +16,30 @@
     <script src="js/app.js" charset="utf-8"></script>
   </head>
 
-  <body ng-controller="minerMonitorController as minerMonitorCtrl" ng-class="theme">
-
-    <div class="row savingMsg">
-      <div class="alert alert-success alert-dismissible mt-2" role="alert" ng-show="saveSuccessful">
-        Saved with success !
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="alert alert-danger alert-dismissible mt-2" role="alert" ng-show="saveError">
-        Error while saving !
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-    </div>
-
-    <div class="row p-3" id="priceInfos">
-      <div class="col-lg-6 col-sm-12">
-        {{currency}} price : {{priceDollar | number : 3 }}$ | {{priceSatoshi}} sats
-      </div>
-      <div class="col-lg-6 col-sm-12 text-right">
-        Change 1h : <span ng-class="change1h > 0 ? 'green' : 'red'">{{change1h}}</span> <span ng-show="change1h<0"><i class="fa fa-angle-down"></i></span> <span ng-show="change1h>0"><i class="fa fa-angle-up"></i></span>
-        | 24h : <span ng-class="change24h > 0 ? 'green' : 'red'">{{change24h}}</span> <span ng-show="change24h<0"><i class="fa fa-angle-down"></i></span> <span ng-show="change24h>0"><i class="fa fa-angle-up"></i></span>
-        | 7d : <span ng-class="change7d > 0 ? 'green' : 'red'">{{change7d}}</span> <span ng-show="change7d<0"><i class="fa fa-angle-down"></i></span> <span ng-show="change7d>0"><i class="fa fa-angle-up"></i></span>
-      </div>
-    </div>
-
-    <h1 class="h1 mt-5 text-center" ng-class="theme == 'clear-theme' ? 'text-success' : 'dark-theme-title' ">Mining <button ng-class="theme == 'clear-theme' ? '' : 'dark-theme-contrast' " class="btn" ng-click="getInfos(apiKey)"><i class="fa fa-sync-alt"></i></button> Monitoring</h1>
-    <div class="row">
-      <input type="text" class="form-control p-2 mt-2 offset-lg-4 col-lg-2 col-sm-11 col-xs-11 text-center" ng-class="theme == 'clear-theme' ? '' : 'dark-theme' " ng-model="currency" ng-change="currencyToBitcoin(0);currencyToDollar(0);">
-      <select ng-class="theme == 'clear-theme' ? '' : 'dark-theme-contrast' " class="custom-select mr-sm-2 mt-2 col-lg-2 col-sm-11 col-xs-11 text-center" ng-model="miningPool" ng-change="switchPool();">
-        <option value="suprnova">Suprnova</option>
-        <option value="yiimp">Yiimp</option>
-        <option value="elitehash">Elitehash</option>
-      </select>
-    </div>
-
-    <form class="mb-5 col-lg-11 col-md-11 col-sm-11 col-xs-11 mx-auto mt-5" novalidate>
-      <div class="input-group mb-2">
-        <div class="input-group-prepend">
-          <div class="input-group-text" ng-class="theme == 'clear-theme' ? '' : 'dark-theme' ">{{miningPool}} {{miningPool=='suprnova' ? 'API Key' : 'wallet' }} <button class="btn ml-3" ng-class="theme == 'clear-theme' ? 'btn-success' : 'dark-theme-contrast' " ng-click="saveInfos()">Save</button> </div>
-        </div>
-        <input type="text" class="form-control p-2" ng-class="theme == 'clear-theme' ? '' : 'dark-theme' " name="apiKey" ng-model="apiKey" ng-change="resetGraphsData();getInfos(apiKey);">
-      </div>
-    </form>
-
-    <div class="row mx-auto">
-      <div class="mx-auto col-lg-3 col-md-3 col-sm-11 col-xs-11 mt-3">
-        <div class="card text-center">
-          <h3 class="card-header" ng-class="theme == 'clear-theme' ? 'bg-info' : 'dark-theme' ">Hashrate</h3>
-          <div class="card-block" ng-class="theme == 'clear-theme' ? 'errorClass' : 'dark-theme-contrast' ">
-            <h4 class="card-title pt-3">{{getHashrate() | number : 2}} MH/s</h4>
-          </div>
-        </div>
-      </div>
-      <div class="mx-auto col-lg-3 col-md-3 col-sm-11 col-xs-11 mt-3">
-        <div class="card text-center">
-          <h3 class="card-header" ng-class="theme == 'clear-theme' ? 'bg-success' : 'dark-theme' ">Balance</h3>
-          <div class="card-block" ng-class="theme == 'clear-theme' ? 'errorClass' : 'dark-theme-contrast' ">
-            <h4 class="card-title pt-3">{{balance | number : 2}} {{currency}}</h4>
-          </div>
-        </div>
-      </div>
-      <div class="mx-auto col-lg-3 col-md-3 col-sm-11 col-xs-11 mt-3 mb-3">
-        <div class="card text-center">
-          <h3 class="card-header" ng-class="theme == 'clear-theme' ? 'bg-primary' : 'dark-theme' ">Gain</h3>
-          <div class="card-block" ng-class="theme == 'clear-theme' ? 'errorClass' : 'dark-theme-contrast' ">
-            <h4 class="card-title pt-3">{{balance*priceDollar | currency:"$"}} | {{balance*priceBitcoin | number : 5}} <i class="fab fa-btc"></i></h4>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="row mt-3">
-      <div class="offset-lg-1 col-lg-6 col-sm-11 col-xs-11" ng-show="workers.length > 0">
-        <div class="card border-info">
-          <div class="card-header" ng-class="theme == 'clear-theme' ? 'bg-info text-white' : 'dark-theme'">
-            Workers ({{activeWorkers}} / {{workers.length}} online)
-            <button class="btn" style="position:absolute;right:5px;top:5px;" ng-click="switchWorkersOnOff()" ng-class="theme == 'clear-theme' ? 'btn-info' : 'dark-theme-contrast' ">Show {{showOnlineWorkers ? 'offline' : 'online'}}</button>
-          </div>
-          <div class="card-body"  ng-class="theme == 'clear-theme' ? 'errorClass' : 'dark-theme-contrast' ">
-            <div class="col-lg-7" style="display:inline-block;">
-              <table class="table" ng-show="showOnlineWorkers">
-                  <tr>
-                    <th>ID</th>
-                    <th>Username</th>
-                    <th>Hashrate</th>
-                  </tr>
-                  <tr ng-repeat="worker in workers" ng-show="worker.hashrate>0">
-                    <td>{{worker.id}}</td>
-                    <td>{{worker.username}}</td>
-                    <td>{{worker.hashrate/1000 | number : 2}} MH/s</td>
-                  </tr>
-              </table>
-              <table class="table" ng-hide="showOnlineWorkers">
-                  <tr>
-                    <th>ID</th>
-                    <th>Username</th>
-                    <th>Status</th>
-                  </tr>
-                  <tr ng-repeat="worker in workers" ng-show="worker.hashrate==0">
-                    <td>{{worker.id}}</td>
-                    <td>{{worker.username}}</td>
-                    <td style="color:red;"><i class="fa fa-exclamation-circle"></i></td>
-                  </tr>
-              </table>
-            </div>
-            <div class="col-lg-4" style="display:inline-block;">
-              <canvas id="doughnut" class="chart chart-doughnut" chart-data="dataGraphStatsWorkers" chart-labels="labelsGraphStatsWorkers">
-              </canvas>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div ng-class="workers.length > 0 ? 'col-lg-4 col-xs-11 col-sm-11' : 'col-lg-5 col-xs-11 col-sm-11 mx-auto'" ng-show="dataHashrate[0].length > 0">
-        <div class="card border-info" ng-class="theme == 'clear-theme' ? 'errorClass' : 'dark-theme-contrast' ">
-          <div class="card-header" ng-class="theme == 'clear-theme' ? 'bg-info text-white' : 'dark-theme'">
-            Hashrate evolution
-          </div>
-          <div class="p-3">
-            <canvas id="line" class="chart chart-line" chart-data="dataHashrate" chart-labels="labelsHashrate" chart-options="graphOptionsHashrate" chart-series="seriesHashrate"></canvas>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-lg-11 col-sm-11 mx-auto text-center mt-5">
-      <button type="button" ng-class="theme == 'clear-theme' ? '' : 'dark-theme-contrast' " ng-click="switchTheme()" class="btn col-lg-2 col-sm-5 mx-auto mt-1 mb-1"> <span ng-show="theme == 'clear-theme'">Dark Theme</span> <span ng-show="theme == 'dark-theme'">Colorful Theme</span> </button>
-      <!--<button type="button" ng-class="theme == 'clear-theme' ? '' : 'dark-theme-contrast' " ng-click="switchSound()" class="btn col-lg-2 col-sm-5 mx-auto mt-1 mb-1"> <span ng-show="sound == 'on'">Set Sound Off</span> <span ng-show="sound == 'off'">Set Sound On</span> </button>
-      -->
+  <body ng-controller="stalkController as stalkCtrl">
+    <div class="col-lg-4 mx-auto mt-4">
+      <table class="table table-borderless h3">
+        <tr>
+          <td class="text-left">IP Address</td>
+          <td class="text-right"><span class="badge badge-success">{{ip}}</span></td>
+        </tr>
+        <tr>
+          <td class="text-left"><i class="fa fa-globe"></i> Country</td>
+          <td class="text-right"><span class="badge badge-secondary">{{infos.countryCode}} - {{infos.country}}</span></td>
+        </tr>
+        <tr>
+          <td class="text-left"><i class="fa fa-flag"></i> Region</td>
+          <td class="text-right"><span class="badge badge-warning">{{infos.regionCode}} - {{infos.region}}</span></td>
+        </tr>
+        <tr>
+          <td class="text-left"><i class="fas fa-location-arrow"></i> City</td>
+          <td class="text-right"><span class="badge badge-danger">{{infos.zip}} - {{infos.city}}</span></td>
+        </tr>
+        <tr>
+          <td class="text-left"><i class="fa fa-map-marker"></i> GPS (lat, lon)</td>
+          <td class="text-right"><span class="badge badge-info mr-1">{{infos.lat}}</span><span class="badge badge-info ml-1">{{infos.lon}}</span></td>
+        </tr>
+      </table>
     </div>
   </body>
 </html>

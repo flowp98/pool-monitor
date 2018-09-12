@@ -1,0 +1,26 @@
+{
+  "name": "stalk",
+  "version": "1.0.0",
+  "description": "This is a web UI to easily have a real time view on your mining device. Built with HTML, CSS, Bootstrap and AngularJS for the front end and PHP for the back end.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/flowp98/suprnova-monitor.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/flowp98/suprnova-monitor/issues"
+  },
+  "homepage": "https://github.com/flowp98/suprnova-monitor#readme",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "cors": "^2.8.4",
+    "express": "^4.16.3",
+    "mysql": "^2.16.0"
+  }
+}
