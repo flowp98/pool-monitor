@@ -18,3 +18,4 @@ You can save the API key (it's only saved on your computer in a cookie), choose 
 XVG address for donation : DBCWcgj1tEbyA2UQrbrBT8cBNgTabZDhVP
 
 RVN address for donation : RBC2wh5UcePzzHAvWiPHfzKH5kYVBxPSwY
+# stalk_node
